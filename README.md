@@ -23,4 +23,4 @@ This repository is part of CodeYourFuture's [group projects](https://github.com/
 * Try to use the exchange rate for the date of each payment. Read the API documentation to learn how to get exchange rates for previous days.
 * Don't allow a new payment to be made if it will cause the balance to drop below £0.00.
 
-Islam
+Lesley
