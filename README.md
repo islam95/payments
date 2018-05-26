@@ -1,5 +1,3 @@
-Islam
-
 # Payments App
 
 This repository contains initial work on a payments app. To complete the app, you'll need to add functionality so that payments can be recorded in any currency and the balance can be updated correctly.
@@ -25,3 +23,5 @@ This repository is part of CodeYourFuture's [group projects](https://github.com/
 * Try to use the exchange rate for the date of each payment. Read the API documentation to learn how to get exchange rates for previous days.
 * Don't allow a new payment to be made if it will cause the balance to drop below £0.00.
 
+Lesley
+Austine
