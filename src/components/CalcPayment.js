@@ -37,6 +37,10 @@ class Payment extends Component {
       });
   }
 
+  addToPayments = () => {
+    
+  }
+
   render() {
     return (
       <div className="CalcPayment">
@@ -61,6 +65,7 @@ class Payment extends Component {
           GBP.
           <div className="CalcPayment-calculate">
             <Button onClick={this.calculate}>Calculate</Button>
+            <Button onClick={this.addToPayments}>Make Payment</Button>
           </div>
         </div>
       </div>

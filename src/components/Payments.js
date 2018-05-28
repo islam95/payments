@@ -7,7 +7,8 @@ class Payments extends React.Component {
   constructor() {
     super();
     this.state = {
-      total: 0
+      total: 0,
+      payments: []
     };
   }
 
@@ -34,6 +35,12 @@ class Payments extends React.Component {
     );
   });
 
+  componentDidMount() {
+    this.setState({
+      payments: this.paymentsData
+    });
+  }
+
   render() {
     return (
       <table className="Payments">
@@ -47,7 +54,7 @@ class Payments extends React.Component {
             <th>Action</th>
           </tr>
         </thead>
-        <tbody>{this.paymentsData}</tbody>
+        <tbody>{this.state.payments}</tbody>
         <tfoot>
           <tr>
             <td />
