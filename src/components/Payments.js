@@ -1,46 +1,8 @@
 import React from "react";
 import Button from "../components/Button";
 import "./Payments.css";
-import payments from "../data/payments";
 
 class Payments extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      total: 0,
-      payments: []
-    };
-  }
-
-  paymentsData = payments.map((payment, index) => {
-    fetch(`https://exchangeratesapi.io/api/latest?base=${payment.currency}`)
-      .then(response => response.json())
-      .then(data => {
-        let rate = data.rates.GBP;
-        let amount = payment.amount;
-        this.setState({
-          total: this.state.total + rate * amount
-        });
-      });
-
-    return (
-      <tr key={index}>
-        <td>{payment.date}</td>
-        <td>{payment.currency}</td>
-        <td>{payment.amount}</td>
-        <td>{payment.description}</td>
-        <td>{payment.status}</td>
-        <td />
-      </tr>
-    );
-  });
-
-  componentDidMount() {
-    this.setState({
-      payments: this.paymentsData
-    });
-  }
-
   render() {
     return (
       <table className="Payments">
@@ -54,12 +16,25 @@ class Payments extends React.Component {
             <th>Action</th>
           </tr>
         </thead>
-        <tbody>{this.state.payments}</tbody>
+        <tbody>
+          {this.props.payments.map((payment, index) => {
+            return (
+              <tr key={index}>
+                <td>{payment.date}</td>
+                <td>{payment.currency}</td>
+                <td>{payment.amount}</td>
+                <td>{payment.description}</td>
+                <td>{payment.status}</td>
+                <td />
+              </tr>
+            );
+          })}
+        </tbody>
         <tfoot>
           <tr>
             <td />
             <td />
-            <td>{this.state.total.toFixed(2)}</td>
+            <td>{this.props.total.toFixed(2)}</td>
             <td>Total (GBP)</td>
             <td />
             <td />
