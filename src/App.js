@@ -19,7 +19,7 @@ class App extends Component {
         return payment.status === "Pending"
       }),
       total: 0,
-      pendingTotal: 0
+      pendingTotal: 0.00
     };
     this.state.payments.forEach(payment => {
       this.calculateTotal("total", payment.date, payment.currency, payment.amount);
@@ -40,17 +40,6 @@ class App extends Component {
       });
   };
 
-  updateBalance = (currency, amount) => {
-    fetch(`https://exchangeratesapi.io/api/latest?base=${currency}`)
-      .then(response => response.json())
-      .then(data => {
-        let rate = data.rates.GBP;
-        this.setState({
-          balance: this.state.balance - rate * amount
-        });
-      });
-  }
-
   updateTotalAndBalance = (currency, amount) => {
     fetch(`https://exchangeratesapi.io/api/latest?base=${currency}`)
       .then(response => response.json())
@@ -64,11 +53,27 @@ class App extends Component {
   }
 
   addToPayments = (date, currency, amount, desciption = "", status = "Pending") => {
-    const pendingPayments = this.state.pendingPayments;
-    pendingPayments.push({ date, currency, amount, desciption, status });
-    this.calculateTotal("pendingTotal", date, currency, amount);
-    this.updateBalance(currency, amount)
-    this.setState({pendingPayments});
+    
+
+    fetch(`https://exchangeratesapi.io/api/latest?base=${currency}`)
+      .then(response => response.json())
+      .then(data => {
+        let rate = data.rates.GBP;
+        if(this.state.balance > (rate * amount)){
+          this.setState({
+            balance: this.state.balance - rate * amount
+          });
+          this.calculateTotal("pendingTotal", date, currency, amount);
+          const pendingPayments = this.state.pendingPayments;
+          pendingPayments.push({ date, currency, amount, desciption, status });
+          this.setState({pendingPayments});
+        } else {
+          this.setState({
+            balance: this.state.balance,
+            pendingTotal: this.state.pendingTotal
+          })
+        }
+      });
   };
 
   removePayment = (key) => {
