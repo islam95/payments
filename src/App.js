@@ -22,15 +22,15 @@ class App extends Component {
       pendingTotal: 0
     };
     this.state.payments.forEach(payment => {
-      this.calculateTotal("total", payment.currency, payment.amount);
+      this.calculateTotal("total", payment.date, payment.currency, payment.amount);
     });
     this.state.pendingPayments.forEach(payment => {
-      this.calculateTotal("pendingTotal", payment.currency, payment.amount);
+      this.calculateTotal("pendingTotal", payment.date, payment.currency, payment.amount);
     });
   }
 
-  calculateTotal = (total, currency, amount) => {
-    fetch(`https://exchangeratesapi.io/api/latest?base=${currency}`)
+  calculateTotal = (total, date, currency, amount) => {
+    fetch(`https://exchangeratesapi.io/api/${date}?base=${currency}`)
       .then(response => response.json())
       .then(data => {
         let rate = data.rates.GBP;
@@ -66,7 +66,7 @@ class App extends Component {
   addToPayments = (date, currency, amount, desciption = "", status = "Pending") => {
     const pendingPayments = this.state.pendingPayments;
     pendingPayments.push({ date, currency, amount, desciption, status });
-    this.calculateTotal("pendingTotal", currency, amount);
+    this.calculateTotal("pendingTotal", date, currency, amount);
     this.updateBalance(currency, amount)
     this.setState({pendingPayments});
   };
