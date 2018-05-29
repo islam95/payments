@@ -58,7 +58,7 @@ class App extends Component {
         let rate = data.rates.GBP;
         this.setState({
           balance: this.state.balance + rate * amount,
-          pendingPayments: this.state.pendingPayments - rate * amount
+          pendingTotal: this.state.pendingTotal - rate * amount
         });
       });
   }
@@ -73,12 +73,7 @@ class App extends Component {
 
   removePayment = (key) => {
     const pendingPayments = this.state.pendingPayments;
-
-    //updateTotalAndBalance(pendingPayments[key].currency, pendingPayments[key].amount);
-    this.setState({
-      balance: this.state.balance + pendingPayments[key].amount,
-      pendingTotal: this.state.pendingTotal - pendingPayments[key].amount
-    })
+    this.updateTotalAndBalance(pendingPayments[key].currency, pendingPayments[key].amount);
     pendingPayments.splice(key, 1);
     this.setState({pendingPayments}); 
   }
