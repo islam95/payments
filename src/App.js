@@ -51,6 +51,18 @@ class App extends Component {
       });
   }
 
+  updateTotalAndBalance = (currency, amount) => {
+    fetch(`https://exchangeratesapi.io/api/latest?base=${currency}`)
+      .then(response => response.json())
+      .then(data => {
+        let rate = data.rates.GBP;
+        this.setState({
+          balance: this.state.balance + rate * amount,
+          pendingPayments: this.state.pendingPayments - rate * amount
+        });
+      });
+  }
+
   addToPayments = (date, currency, amount, desciption = "", status = "Pending") => {
     const pendingPayments = this.state.pendingPayments;
     pendingPayments.push({ date, currency, amount, desciption, status });
@@ -58,6 +70,18 @@ class App extends Component {
     this.updateBalance(currency, amount)
     this.setState({pendingPayments});
   };
+
+  removePayment = (key) => {
+    const pendingPayments = this.state.pendingPayments;
+
+    //updateTotalAndBalance(pendingPayments[key].currency, pendingPayments[key].amount);
+    this.setState({
+      balance: this.state.balance + pendingPayments[key].amount,
+      pendingTotal: this.state.pendingTotal - pendingPayments[key].amount
+    })
+    pendingPayments.splice(key, 1);
+    this.setState({pendingPayments}); 
+  }
 
   render() {
     return (
@@ -74,7 +98,7 @@ class App extends Component {
           addToPayments={this.addToPayments}
         />
         <h2>Payments</h2>
-        <Payments payments={this.state.pendingPayments} total={this.state.pendingTotal} />
+        <Payments payments={this.state.pendingPayments} total={this.state.pendingTotal} removePayment={this.removePayment} />
         <Payments payments={this.state.payments} total={this.state.total} />
       </div>
     );
