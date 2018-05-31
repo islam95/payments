@@ -5,9 +5,34 @@ class Balance extends Component {
   constructor() {
     super();
     this.state = {
-      alternateCurrency: "USD"
+      alternateCurrency: "USD",
+      alternateBalance: 0
     };
   }
+
+  getConversions() {
+    fetch("https://exchangeratesapi.io/api/latest?base=GBP")
+      .then(response => response.json())
+      .then(data => {
+        const rate = data.rates[this.state.alternateCurrency];
+        const total = this.props.total;
+        this.setState({
+          alternateBalance: (rate * total).toFixed(2)
+        });
+      });
+  }
+
+  componentDidMount() {
+    this.getConversions();
+  }
+
+  convert = event => {
+    const currency = event.target.value;
+    this.setState({
+      alternateCurrency: currency
+    });
+    this.getConversions();
+  };
 
   render() {
     return (
@@ -17,8 +42,11 @@ class Balance extends Component {
           <span className="Balance-total">£{this.props.total}</span>
         </h2>
         <div className="Balance-alt">
-          Your balance is ??? in
-          <select defaultValue={this.state.alternateCurrency}>
+          Your balance is {this.state.alternateBalance} in
+          <select
+            onChange={this.convert}
+            defaultValue={this.state.alternateCurrency}
+          >
             {this.props.currencies.map((currency, index) => (
               <option key={index}>{currency}</option>
             ))}
