@@ -10,7 +10,7 @@ class Balance extends Component {
     };
   }
 
-  getConversions() {
+  getConversions = () => {
     fetch("https://exchangeratesapi.io/api/latest?base=GBP")
       .then(response => response.json())
       .then(data => {
