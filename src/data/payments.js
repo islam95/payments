@@ -35,4 +35,5 @@ let payments = [
     status: "Complete"
   }
 ];
-export default payments
+
+export default payments;
