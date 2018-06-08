@@ -1,6 +1,7 @@
 import React from "react";
 import Button from "../components/Button";
 import "./Payments.css";
+import payments from "../data/payments.js";
 
 class Payments extends React.Component {
   render() {
