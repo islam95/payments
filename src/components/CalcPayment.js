@@ -45,9 +45,7 @@ class Payment extends Component {
     const date = moment().format("YYYY-MM-DD");
     const currency = this.state.selectedCurrency;
     const amount = this.state.input;
-    const description = "Description...";
-    const status = "Pending";
-    this.props.addToPayments(date, currency, amount, description, status);
+    this.props.addToPayments(date, currency, amount);
   }
 
   render() {

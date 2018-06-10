@@ -1,5 +1,5 @@
 import React from "react";
-import Button from "../components/Button";
+import Button from "./Button";
 import "./Payments.css";
 import payments from "../data/payments.js";
 
@@ -18,15 +18,17 @@ class Payments extends React.Component {
           </tr>
         </thead>
         <tbody>
-          {this.props.payments.map((payment, index) => {
+          {this.props.payments.map((row, index) => {
             return (
               <tr key={index}>
-                <td>{payment.date}</td>
-                <td>{payment.currency}</td>
-                <td>{payment.amount}</td>
-                <td>{payment.description}</td>
-                <td>{payment.status}</td>
-                <td />
+                <td>{row.date}</td>
+                <td>{row.currency}</td>
+                <td>{row.amount}</td>
+                <td>{row.description}</td>
+                <td>{row.status}</td>
+                <td>
+                  {row.status === "Pending" ? <Button>Cancel</Button> : ""}
+                </td>
               </tr>
             );
           })}

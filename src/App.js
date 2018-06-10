@@ -12,32 +12,51 @@ class App extends Component {
     this.state = {
       currencies: currencies,
       balance: 87.43, // This is the current balance in GBP
-      payments: payments, 
-      total: 0
+      payments: payments.filter(payment => {
+        return payment.status === "Complete"
+      }),
+      pendingPayments: payments.filter(payment => {
+        return payment.status === "Pending"
+      }),
+      total: 0,
+      pendingTotal: 0
     };
-    this.state.payments.forEach((payment, index) => {
-      this.fetchData(payment.currency, payment.amount);
+    this.state.payments.forEach(payment => {
+      this.calculateTotal("total", payment.currency, payment.amount);
+    });
+    this.state.pendingPayments.forEach(payment => {
+      this.calculateTotal("pendingTotal", payment.currency, payment.amount);
     });
   }
 
-  fetchData = (currency, amount) => {
+  calculateTotal = (total, currency, amount) => {
+    fetch(`https://exchangeratesapi.io/api/latest?base=${currency}`)
+      .then(response => response.json())
+      .then(data => {
+        let rate = data.rates.GBP;
+        const aTotal = {};
+        aTotal[total] = this.state[total] + rate * amount
+        this.setState(aTotal);
+      });
+  };
+
+  updateBalance = (currency, amount) => {
     fetch(`https://exchangeratesapi.io/api/latest?base=${currency}`)
       .then(response => response.json())
       .then(data => {
         let rate = data.rates.GBP;
         this.setState({
-          total: this.state.total + rate * amount
+          balance: this.state.balance - rate * amount
         });
       });
-  };
+  }
 
-  addToPayments = (date, currency, amount, desciption, status) => {
-    const payments = this.state.payments;
-    payments.push({ date, currency, amount, desciption, status });
-    this.fetchData(currency, amount);
-    this.setState({
-      payments
-    });
+  addToPayments = (date, currency, amount, desciption = "", status = "Pending") => {
+    const pendingPayments = this.state.pendingPayments;
+    pendingPayments.push({ date, currency, amount, desciption, status });
+    this.calculateTotal("pendingTotal", currency, amount);
+    this.updateBalance(currency, amount)
+    this.setState({pendingPayments});
   };
 
   render() {
@@ -55,6 +74,7 @@ class App extends Component {
           addToPayments={this.addToPayments}
         />
         <h2>Payments</h2>
+        <Payments payments={this.state.pendingPayments} total={this.state.pendingTotal} />
         <Payments payments={this.state.payments} total={this.state.total} />
       </div>
     );
