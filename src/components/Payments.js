@@ -27,7 +27,7 @@ class Payments extends React.Component {
                 <td>{row.description}</td>
                 <td>{row.status}</td>
                 <td>
-                  {row.status === "Pending" ? <Button>Cancel</Button> : ""}
+                  {row.status === "Pending" ? <Button onClick={() => this.props.removePayment(index)}>Cancel</Button> : ""}
                 </td>
               </tr>
             );
